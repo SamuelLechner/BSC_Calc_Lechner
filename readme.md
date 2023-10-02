@@ -1,0 +1,1 @@
+This repository includes the code I have written in the scope of my bachelor's thesis at TU Wien in cooperation with Max Planck Institute of Plasmaphysics. It includes a tool to manipulate density profile as well as getting a understanding of their impact on the bootstrap current.

@@ -161,8 +161,6 @@ class Main:
             pV.addNeMan(ne_m)
             pV.addBsMan(bs_m)
 
-
-
         pCH.save('MultipleBsCompares/constShiftHorizontal')
         pCV.save('MultipleBsCompares/constShiftVertical')
         pH.save('MultipleBsCompares/horizontalShift')
