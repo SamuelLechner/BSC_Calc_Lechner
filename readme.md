@@ -4,16 +4,14 @@ This repository contains the code developed during my [bachelor's thesis](https:
 
 ## How To Use
 
-The best way to understand how it works is by having a look at the [main file](main.py) where you will find the routines I've used in my bachelor's thesis.
-
+The most effective method for gaining insight into its functionality is to examine the [main file](main.py), where you can explore the routines that I have implemented in my bachelor's thesis.
 ## Further Improvements
 
-Although I am currently not planning to implement further improvements and extensions, of course YOU can do it. Contact me and I can add you as a collaborator ;)
+While I don't have immediate plans to implement additional enhancements or extensions, I'm open to collaboration. If you're interested in contributing and making improvements, please feel free to reach out to me, and I'd be happy to add you as a collaborator!
 
 #### Possible improvements
-* Make [collisionality_calculator](collisionality_calculator.py) use the data provided from [data_reader](data_reader.py) and not reading on its own from auf_sfutils etc.
-* Make [data_reader](data_reader.py)'s interpolating feature not to interpolate over all time axis, but only over a specified time. At the moment, it first interpolates and then one can pick a certain time which is quite inefficient.
-
+* Enhance the [collisionality_calculator](collisionality_calculator.py) module by modifying it to utilize data provided by the [data_reader](data_reader.py) module, instead of independently reading data from auf_sfutils and other sources.
+* Improve the interpolating functionality within the [data_reader](data_reader.py) module by allowing users to specify a particular time range for interpolation, rather than interpolating data across the entire time axis. Currently, the module interpolates the entire dataset, followed by the user manually selecting a specific time, which can be inefficient.
 #### Disclaimer
 
-I am aware that some logical pieces of this code can be further improved. It's just that the scope of my bachelor thesis is not to provide a 100% perfect software product.
+I recognize that there is room for enhancement in certain logical aspects of this code. However, it's important to note that my bachelor thesis primarily focuses on achieving the project's goals within the given scope, rather than striving for absolute perfection in the software product. Consequently, I've had to make strategic compromises in specific areas.
