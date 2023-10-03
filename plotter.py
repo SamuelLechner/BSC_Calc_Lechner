@@ -232,7 +232,7 @@ class Plot:
             current_time = now.strftime("%H_%M_%S")
             ms = round(time.time() * 1000 % 12)
             filename = f'{current_time}_{ms}_{self.shot}'
-        self.fig.savefig(fname=f'/home/IPP-AD/slech/Documents/BSC_Calc_Lechner/{filename}.pdf', dpi=200,format='pdf', bbox_inches='tight') #png
+        self.fig.savefig(fname=f'/home/IPP-AD/slech/Documents/BSC_Calc_Lechner/{filename}.pdf', dpi=200,format='pdf', bbox_inches='tight', transparent=True) #png
 
     def setLegend(self):
         if self.neMode:
@@ -240,6 +240,7 @@ class Plot:
             self.axNeGrad.legend(fontsize=self.LEGEND_FONTSIZE, facecolor=self.COLOR_LEGENDBOX)
         if self.bsMode:
             self.axBs.legend(fontsize=self.LEGEND_FONTSIZE, facecolor=self.COLOR_LEGENDBOX)
+        if self.neMode and self.bsMode:
             self.axTemp.legend(fontsize=self.LEGEND_FONTSIZE, facecolor=self.COLOR_LEGENDBOX)
             self.axTempGrad.legend(fontsize=self.LEGEND_FONTSIZE, facecolor=self.COLOR_LEGENDBOX)
             self.axColli.legend(fontsize=self.LEGEND_FONTSIZE, facecolor=self.COLOR_LEGENDBOX)

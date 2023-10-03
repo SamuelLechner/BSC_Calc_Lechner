@@ -33,9 +33,9 @@ class Main:
         self.SF_VER_SHIFT = 0.1
         self.SF_CONST_SHIFT = -0.07
 
-        #self.singleNe() #CHAPTER: Single ne profile
-        #self.singleBs() #CHAPTER: Computing single bs profile
-        #self.multipleShiftsNe() #CHAPTER: Introducing all manipulation functions
+        self.singleNe() #CHAPTER: Single ne profile
+        self.singleBs() #CHAPTER: Computing single bs profile
+        self.multipleShiftsNe() #CHAPTER: Introducing all manipulation functions
         self.multipleShiftsBs() #CHAPTER: Recomputing bs with manipulated ne functions
 
     def singleNe(self): # Loading the density profile
@@ -45,7 +45,7 @@ class Main:
         p.setPlottingBoundaries(0.8,1.1)
         ne = data.getNeFromTime(self.TIME)
         p.addNeOrig(ne)
-        p.save(f'ne')
+        p.save(f'Plots/SingleNe/ne')
         #p.show()
 
     def singleBs(self):
@@ -59,7 +59,7 @@ class Main:
         bsAvg = bs.getBsCurrent(self.TIME)
         p.addBsOrig(bsAvg)
         p.addNeOrig(ne)
-        p.save(f'bs')
+        p.save(f'Plots/SingleBs/bs')
         #p.show()
 
 
@@ -93,10 +93,10 @@ class Main:
             pH.addNeMan(ne_mH)
             pV.addNeMan(ne_mV)
 
-        pCH.save('MultipleShiftsNe/constShiftHorizontal')
-        pCV.save('MultipleShiftsNe/constShiftVertical')
-        pH.save('MultipleShiftsNe/horizontalShift')
-        pV.save('MultipleShiftsNe/verticalShift')
+        pCH.save('Plots/MultipleNe/constShiftHorizontal')
+        pCV.save('Plots/MultipleNe/constShiftVertical')
+        pH.save('Plots/MultipleNe/horizontalShift')
+        pV.save('Plots/MultipleNe/verticalShift')
         #pCH.show()
         #pCV.show()
         #pH.show()
@@ -161,10 +161,10 @@ class Main:
             pV.addNeMan(ne_m)
             pV.addBsMan(bs_m)
 
-        pCH.save('MultipleBsCompares/constShiftHorizontal')
-        pCV.save('MultipleBsCompares/constShiftVertical')
-        pH.save('MultipleBsCompares/horizontalShift')
-        pV.save('MultipleBsCompares/verticalShift')
+        pCH.save('Plots/MultipleBs/constShiftHorizontal')
+        pCV.save('Plots/MultipleBs/constShiftVertical')
+        pH.save('Plots/MultipleBs/horizontalShift')
+        pV.save('Plots/MultipleBs/verticalShift')
         #pCH.show()
         #pCV.show()
         #pH.show()

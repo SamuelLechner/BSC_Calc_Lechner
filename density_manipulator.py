@@ -164,7 +164,7 @@ class Manipulator:
             scaleFactor = float(input(f"Enter scale factor (between {min} and {max}): "))
             if scaleFactor >= min and scaleFactor <= max:
                 return scaleFactor
-            print(f"Please provide a number between {min} and {max}")
+            print(f"Invalid input. Choose a number between {min} and {max}")
 
     def getNeDeepCopy(self):
         return [elem for elem in self.ne]
