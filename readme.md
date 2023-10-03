@@ -15,7 +15,7 @@ While I don't have immediate plans to implement additional enhancements or exten
 #### Suggestions for Enhancing
 * Enhance the [collisionality_calculator](collisionality_calculator.py) module by modifying it to utilize data provided by the [data_reader](data_reader.py) module, instead of independently reading data from auf_sfutils and other sources.
 * Improve the interpolating functionality within the [data_reader](data_reader.py) module by allowing users to specify a particular time range for interpolation, rather than interpolating data across the entire time axis. Currently, the module interpolates the entire dataset, followed by the user manually selecting a specific time, which can be inefficient.
-* Enhance the precision of the Bootstrap Computation Method beyond the current approach, which relies on the Peeters' Approximation. This enhancement promises a substantial increase in accuracy.
+* Enhance the precision of the Bootstrap Computation Method beyond the current approach, which relies on the Peeters' Approximation. I suggest to follow the suggestions by Andreas Redl in [this paper](https://pubs.aip.org/aip/pop/article-abstract/28/2/022502/124727/A-new-set-of-analytical-formulae-for-the?redirectedFrom=PDF). This enhancement promises a substantial increase in accuracy.
 
 ## Disclaimer
 
