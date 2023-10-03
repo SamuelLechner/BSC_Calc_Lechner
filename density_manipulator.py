@@ -105,8 +105,6 @@ class Manipulator:
         idx1, idx2, idxDelta = self.getRhoIndices(rho2)
         ne_m = getDeepCopy(self.ne)
         x = np.linspace(5, 0, num=idxDelta)
-        #order = (int(log10(ne_m[idx1])))
-        #ne_m[idx1:idx2] += 10**order*scaleFactor*arctan(x) #(int(log10(ne_m[idx1])))
         ne_m[idx1:idx2] += ne_m[idx1:idx2] * arctan(x) * scaleFactor * 2 / pi
         return ne_m
 
