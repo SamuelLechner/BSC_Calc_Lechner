@@ -6,7 +6,7 @@ This repository contains the code developed during my [bachelor's thesis](https:
 
 #### How To Use
 
-The most effective method for gaining insight into its functionality is to examine the [main file](main.py), where you can explore the routines that I have implemented in my bachelor's thesis. If you are only interested in the resulting plots, go to [Plots](Plots/)
+The most effective method for gaining insight into its functionality is to examine the [main file](main.py), where you can explore the routines that I have implemented in my bachelor's thesis. If you are only interested in the resulting plots, jump into the [Plots](Plots/) directory.
 
 ## Contribute
 
