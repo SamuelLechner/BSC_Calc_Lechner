@@ -29,6 +29,8 @@ class Main:
         self.TIME2 = 6
         self.RHO1 = 0.9
         self.RHO2 = 1.05
+        self.p1 = 0.85
+        self.p2 = 1.1
         self.SF_HOR_SHIFT = -0.3
         self.SF_VER_SHIFT = 0.1
         self.SF_CONST_SHIFT = -0.07
@@ -42,7 +44,6 @@ class Main:
         data = Data(self.SHOT)
         p = Plot(data, mode='ne')
         p.setTime(self.TIME)
-        p.setPlottingBoundaries(0.8,1.1)
         ne = data.getNeFromTime(self.TIME)
         p.addNeOrig(ne)
         p.save(f'Plots/SingleNe/ne')
@@ -64,8 +65,8 @@ class Main:
 
 
     def multipleShiftsNe(self):
-        p1,p2 = 0.85,1.1
         self.multShiftShot = self.SHOT
+        p1,p2 = self.p1, self.p2
         data = Data(shot=self.multShiftShot, lvl=200)
         ne = data.getNeFromTime(self.TIME)
         pCH = Plot(data, mode='ne')
@@ -80,7 +81,7 @@ class Main:
         m.setTime(self.TIME)
         m.setBoundaries(self.RHO1, self.RHO2)
         valuesconstShiftHorizontal = [-0.02,-0.01,0.01,0.02]
-        valuesconstShiftVertical = [-0.2,-0.1,0.1,0.2]
+        valuesconstShiftVertical = [-0.1,-0.05,0.05,0.1]
         valuesHorShift = [-0.2,-0.1,0.1,0.2]
         valuesVerShift = [0.2,0.4,0.6,0.8]
         for val in zip(valuesconstShiftHorizontal,valuesconstShiftVertical,valuesHorShift,valuesVerShift):
@@ -103,8 +104,8 @@ class Main:
         #pV.show()
 
     def multipleShiftsBs(self):
-        p1,p2 = 0.85,1.1
         self.multShiftShot = self.SHOT
+        p1,p2 = self.p1, self.p2
         data = Data(shot=self.multShiftShot, lvl=200)
         ne = data.getNeFromTime(self.TIME)
         pCH = Plot(data, mode='stacked')
@@ -121,7 +122,7 @@ class Main:
         m.setTime(self.TIME)
         m.setBoundaries(self.RHO1, self.RHO2)
         valuesconstShiftHorizontal = [-0.02,-0.01,0.01,0.02]
-        valuesconstShiftVertical = [-0.2,-0.1,0.1,0.2]
+        valuesconstShiftVertical = [-0.1,-0.05,0.05,0.1]
         valuesHorShift = [-0.2,-0.1,0.1,0.2]
         valuesVerShift = [0.2,0.4,0.6,0.8]
         cOrig = c.get_collisionalty(shot = self.SHOT, t = self.TIME)
