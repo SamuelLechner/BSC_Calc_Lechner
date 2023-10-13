@@ -7,6 +7,7 @@ import aug_sfutils as sf
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+from data_reader import Data
 from scipy.interpolate import interp1d
 from scipy import interpolate
 
@@ -17,8 +18,8 @@ e=1.6*10**(-19) #Elementarladung
 
 
 class Collisionality:
-    def __init__(self, shotNr: int):
-        self.shot = shotNr 
+    def __init__(self, data: Data):
+        self.data = data
 
     # This function tries to read a shotfile independent of a specific experiment. It does that by iterating through a list of experiments and testing for testparam being available.
     def reliable_get_SF(self, shot,diagnostic,exps,testparam):
@@ -40,42 +41,34 @@ class Collisionality:
     def get_collisionalty(self, shot: int, t: float, ne: list = None):
         t = (t, t+0.01)
 
-        ida=self.reliable_get_SF(shot,'ida',['lrado', 'AUGD', 'GHARR'],'time')
-        idz=self.reliable_get_SF(shot,'idz',['lrado', 'AUGD', 'GHARR'],'Zeff')
-        idi=self.reliable_get_SF(shot,'idi',['lrado', 'AUGD', 'GHARR'],'Ti')
-        gqh=self.reliable_get_SF(shot,'gqh',['lrado', 'AUGD', 'GHARR'],'Rmag')
-        cpz=self.reliable_get_SF(shot,'cpz',['lrado', 'AUGD', 'GHARR'],'LineInfo')
-        mai=self.reliable_get_SF(shot,'mai',['lrado', 'AUGD', 'GHARR'],'BTF')
-        mag=self.reliable_get_SF(shot,'mag',['lrado', 'AUGD', 'GHARR'],'Ipa')
-        #ide=self.reliable_get_SF(shot,'IDE',['lrado', 'AUGD', 'GHARR'],'time')
-        ide=sf.EQU(shot, exp="AUGD", diag="IDE") #gebraucht??
+        time = self.data.time_ida
+        ne = self.data.ne
+        rho = self.data.rho
+        Te = self.data.te
+        q95 = self.data.q95
+        TIMEF = self.data.timef
+        Zeff = self.data.zeff
+        timeZeff = self.data.timezeff
+        rhop = self.data.rhop
+        Ti = self.data.ti
+        timeTi = self.data.time_idi
+        rhopol = self.data.rhopol
+        R = self.data.r
+        Raus = self.data.raus
+        Rin = self.data.rin
+        timef = self.data.timef
+        Roben = self.data.roben
+        Runten = self.data.runten
+        LineInfo = self.data.lineinfo
+        Btf = self.data.Bt
+        tmag = self.data.time_mai
+        I = self.data.i
+        tmag1 = self.data.tmag1
 
-        time=np.array(ida('time'))
-        ne = np.array(ida('ne')) if ne is None else np.array(ne)
-        rho=np.array(ida('rhop'))
-        Te=np.array(ida('Te'))
-        q95=np.array(-gqh('q95'))
-        TIMEF=np.array(gqh('TIMEF'))
-        Zeff=np.array(idz('Zeff'))
-        timeZeff=np.array(idz('timeZeff'))
-        rhop=np.array(idz('rhop'))
-        Ti=np.array(idi('Ti')).T
-        timeTi=np.array(idi('time'))
-        rhopol=np.array(idi('rp_Ti'))
-        R=np.array(gqh('Rmag'))
-        Raus=np.array(gqh('Raus'))
-        Rin=np.array(gqh('Rin'))
-        timef=np.array(gqh('TIMEF'))
-        Roben=np.array(gqh('delRoben'))
-        Runten=np.array(gqh('delRuntn'))
-        LineInfo=cpz('LineInfo')
-        Btf=np.array(mai('BTF'))
-        tmag=np.array(mai('T-MAG-1'))
-        I=np.array(mag('Ipa'))
-        tmag1=np.array(mag('T-MAG-1'))
-        Zimp=LineInfo['Z0'][0] #Information about atomic number of main impurity
+        q = self.data.q #das ist q_tor
+        
+        Zimp = LineInfo['Z0'][0] #Information about atomic number of main impurity
 
-        q=ide.q #das ist q_tor
         q=q*(-1)
         q=q.T
         map=sf.mapeq
@@ -97,7 +90,6 @@ class Collisionality:
         qfinal=spl(xnew)
         q_new=interp1d(xnew,qfinal,kind='cubic',fill_value="extrapolate") #interpolation of safety-factor
         q=q_new(rho[:,0])
-
 
         q95_new=interp1d(TIMEF,q95,kind='cubic',fill_value="extrapolate") #interpolation of safety-factor
         q95=q95_new(time)

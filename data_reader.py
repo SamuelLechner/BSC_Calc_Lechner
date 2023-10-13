@@ -21,8 +21,7 @@ class Data:
 
     def startUp(self, lvl):
         print(f"Reading data from server.")
-        if not self.readDataFromServer():
-            print(f'Error at reading Data from Server. Please try another shot.')
+        self.readDataFromServer():   
         else:
             self.linIntLvl = len(self.rho) if not lvl or lvl <= len(self.rho) else lvl
             # lvl ist the amout of datapoints one wants to have after interpolation, 300 defaults
@@ -33,39 +32,84 @@ class Data:
             else:
                 print(f'Error at interpolation.')
 
-    def readDataFromServer(self) -> bool:
+    def relieable_get_SF(self, diagnostic: str, testParam: str):
+        result = None
         names = ["AUGD","LRADO", "GHARR"]
-        idg,ida,idi,equ = None, None, None, None
         for name in names:
             try:
-                equ = sf.EQU(self.shot, diag="IDE", exp=name)
-                self.b = equ.get_profile("Bave")
-                self.time_equ = equ.time
+                this = sf.SFREAD(self.data.shot, diag=diagnostic, exp=name)
+                if this(testParam) is not None:
+                    result = this
+                    break
+            except AttributeError:
+                continue
+        if result is not None:
+            return result
+        else:
+            raise Exception(f'Cannot read "{diagnostic}" or did not find "{param}" there.')
+
+    def relieable_get_EQU(self):
+        names = ["AUGD","LRADO", "GHARR"]
+        for name in names:
+            try:
+                self.equ = sf.EQU(self.shot, diag="IDE", exp=name)
                 break
             except AttributeError:
                 continue
-        if not equ:
-            print(f'EQU cannot be read.')
-            return False
+        if self.equ is None:
+            raise Exception("Cannot read equ.")
 
-        ida = sf.SFREAD(self.shot, 'ida', exp='AUGD')
-        idg = sf.SFREAD(self.shot, 'idg', exp=self.exp)
-        if not idg('TIMEF'):
-            idg = sf.SFREAD(self.shot, 'idg', exp='AUGD')
-        idi = sf.SFREAD(self.shot, 'idi', exp='AUGD')  # on idi there is only AUGD possible
-        mai = sf.SFREAD("MAI", self.shot)
-
-        self.equ = equ
+    def readDataFromServer(self) -> bool:
+        ida = self.reliable_get_SF('ida', 'time')
         self.time_ida = ida('time')  # time for ida
-        self.time_idi = idi('time')  # time for idi
-        self.time_idg = idg('TIMEF') # time for idg
-        self.time_mai = mai("T-MAG-1") # time for mai
         self.ne = ida('ne')  # electon density
         self.rho = ida('rhop')[:,0]  # radius, rho is constant over time
         self.te = ida('Te') # electron temperature
-        self.ti = mapTiToNewRho(ti=idi('Ti'), rhoOld=idi('rp_Ti')[:, 0], rhoNew=self.rho) # ion temperature
+
+        idg = self.reliable_get_SF('idg', 'time')
+        self.time_idg = idg('TIMEF') # time for idg
         self.maj_rad = idg('Rmag')  # major plasma radius
+
+        idi = self.reliable_get_SF('idi', 'time')
+        self.time_idi = idi('time')  # time for idi
+        self.ti = mapTiToNewRho(ti=idi('Ti'), rhoOld=idi('rp_Ti')[:, 0], rhoNew=self.rho) # ion temperature
+        self.rhopol = idi('rp_Ti')
+
+        ide = self.reliable_get_SF('IDE', 'time')
+        self.q = ide.q
+
+        mai = self.reliable_get_SF('mai', 'time')
+        self.time_mai = mai("T-MAG-1") # time for mai
         self.Bt = mai("BTF")
+        
+        equ = relieable_get_EQU()
+        self.b = self.equ.get_profile("Bave")
+        self.time_equ = self.equ.time
+        self.q = self.equ.q
+
+        idz = self.reliable_get_SF('idz', 'timeZeff')
+        self.timezeff = idz('timeZeff')
+        self.zeff = idz('Zeff')
+        self.rhop = idz('rhop')
+
+        gqh = self.reliable_get_SF('gqh', 'time')
+        self.q95 = -gqh('q95')
+        self.r = gqh('Rmag')
+        self.raus = gqh('Raus')
+        self.rin = gqh('Rin')
+        self.timef = gqh('TIMEF')
+        self.roben = gqh('delRoben')
+        self.runten = gqh('delRuntn')
+
+        cpz = self.reliable_get_SF('cpz', 'time')
+        self.lineinfo = cpz('LineInfo')
+        self.zimp = Zimp=LineInfo['Z0'][0] #Information about atomic number of main impurity
+
+        gqh = self.reliable_get_SF('gqh', 'time')
+
+        mag = self.reliable_get_SF('mag', 'time')
+        self.i = mag('Ipa')
+        self.tmag1 = mag('T-MAG-1')
 
         return True
 
