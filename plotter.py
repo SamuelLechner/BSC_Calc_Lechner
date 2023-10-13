@@ -100,10 +100,10 @@ class Plot:
         else:
             raise Exception("Invalid mode")
         self.setIterations(1) #default
-        plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+        plt.ticklabel_format(style='sci', axis='y', scilimits=(0,3))
         return True
 
-    def setTime(self, time: float):
+    def setTitle(self, time: float):
         self.PLOT_TITLE = f'ASDEX Upgrade #{str(self.shot)} at time = {time} s'
 
     def setPlottingBoundaries(self, rho1: float = None, rho2: float = None):
@@ -116,7 +116,7 @@ class Plot:
         self.alphaList = np.flip(np.delete(np.linspace(0,1,number+1),0))
 
     def setParams(self, time, iterations, ne, p1, p2):
-        self.setTime(time)
+        self.setTitle(time)
         self.setIterations(iterations)
         self.addNeOrig(ne)
         self.setPlottingBoundaries(p1,p2)
@@ -140,12 +140,6 @@ class Plot:
         self.axBs.set_xlim([self.rho1, self.rho2])
         self.bsPlotted = True
 
-    def setAxisColli(self):
-        self.fig.suptitle(self.PLOT_TITLE, fontsize=self.TITLE_FONTSIZE)
-        self.axColli.set_xlabel(xlabel=self.AXIS_RHO)
-        self.axColli.set_ylabel(ylabel=self.AXIS_COLLI)
-        self.axColli.set_xlim([self.rho1, self.rho2])
-
 
     def setAxisTemp(self):
         self.axTemp.set_ylabel(ylabel=self.AXIS_TEMP)
@@ -155,12 +149,25 @@ class Plot:
 
     def setAxisColli(self, c: list = None):
         self.axColli.set_xlabel(xlabel=self.AXIS_RHO)
+        self.fig.suptitle(self.PLOT_TITLE, fontsize=self.TITLE_FONTSIZE)
         self.axColli.set_ylabel(ylabel=self.AXIS_COLLI)
         if c is not None:
+            return
             y_min = min(c[(self.rho >= self.rho1) & (self.rho <= self.rho2)])
             y_max = max(c[(self.rho >= self.rho1) & (self.rho <= self.rho2)])
             padding = 0.1
             self.axColli.set_ylim(y_min - padding, y_max + padding)
+
+
+    def setYLimits(self):
+        if self.neMode:
+            self.axNe.set_ylim(0, 1e20)
+            self.axNeGrad.set_ylim(-9e18, 1e18)
+        if self.bsMode:
+            self.axBs.set_ylim(-.1, 2.5)
+            self.axTemp.set_ylim(-10, 1050)
+            self.axTempGrad.set_ylim(-80, 10)
+            self.axColli.set_ylim(0, 4)
 
     def addNeOrig(self, ne: list):
         if not self.neMode:
