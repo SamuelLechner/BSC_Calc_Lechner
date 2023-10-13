@@ -21,8 +21,7 @@ class Data:
 
     def startUp(self, lvl):
         print(f"Reading data from server.")
-        self.readDataFromServer():   
-        else:
+        if self.readDataFromServer():
             self.linIntLvl = len(self.rho) if not lvl or lvl <= len(self.rho) else lvl
             # lvl ist the amout of datapoints one wants to have after interpolation, 300 defaults
             # usually there are 200 datapoints coming out of the asdex upgrade system at least for rho
@@ -32,32 +31,36 @@ class Data:
             else:
                 print(f'Error at interpolation.')
 
-    def relieable_get_SF(self, diagnostic: str, testParam: str):
-        result = None
-        names = ["AUGD","LRADO", "GHARR"]
+    def reliable_get_SF(self, diagnostic: str, testParam: str):
+        found = None
+        names = ['AUGD', 'LRADO', 'GHARR']
         for name in names:
             try:
-                this = sf.SFREAD(self.data.shot, diag=diagnostic, exp=name)
+                this = sf.SFREAD(self.shot, diagnostic, exp=name)
                 if this(testParam) is not None:
-                    result = this
+                    found = this
                     break
             except AttributeError:
                 continue
-        if result is not None:
-            return result
+        if found is not None:
+            return found
         else:
-            raise Exception(f'Cannot read "{diagnostic}" or did not find "{param}" there.')
+            raise Exception(f'Cannot read "{diagnostic}" or did not find "{testParam}" there.')
 
-    def relieable_get_EQU(self):
-        names = ["AUGD","LRADO", "GHARR"]
+    def reliable_get_EQU(self):
+        found = None
+        names = ['AUGD', 'LRADO', 'GHARR']
         for name in names:
             try:
-                self.equ = sf.EQU(self.shot, diag="IDE", exp=name)
-                break
+                if sf.EQU(self.shot, diag='IDE', exp=name):
+                    found = sf.EQU(self.shot, diag='IDE', exp=name)
+                    break
             except AttributeError:
                 continue
-        if self.equ is None:
-            raise Exception("Cannot read equ.")
+        if found is not None:
+            return found
+        else:
+            raise Exception("Cannot read IDE.")
 
     def readDataFromServer(self) -> bool:
         ida = self.reliable_get_SF('ida', 'time')
@@ -66,7 +69,7 @@ class Data:
         self.rho = ida('rhop')[:,0]  # radius, rho is constant over time
         self.te = ida('Te') # electron temperature
 
-        idg = self.reliable_get_SF('idg', 'time')
+        idg = self.reliable_get_SF('idg', 'TIMEF')
         self.time_idg = idg('TIMEF') # time for idg
         self.maj_rad = idg('Rmag')  # major plasma radius
 
@@ -75,24 +78,21 @@ class Data:
         self.ti = mapTiToNewRho(ti=idi('Ti'), rhoOld=idi('rp_Ti')[:, 0], rhoNew=self.rho) # ion temperature
         self.rhopol = idi('rp_Ti')
 
-        ide = self.reliable_get_SF('IDE', 'time')
-        self.q = ide.q
-
-        mai = self.reliable_get_SF('mai', 'time')
+        mai = self.reliable_get_SF('mai', 'BTF')
         self.time_mai = mai("T-MAG-1") # time for mai
         self.Bt = mai("BTF")
         
-        equ = relieable_get_EQU()
-        self.b = self.equ.get_profile("Bave")
-        self.time_equ = self.equ.time
-        self.q = self.equ.q
+        ide = self.reliable_get_EQU()
+        self.b = ide.get_profile("Bave")
+        self.time_equ = ide.time
+        self.q = ide.q
 
         idz = self.reliable_get_SF('idz', 'timeZeff')
         self.timezeff = idz('timeZeff')
         self.zeff = idz('Zeff')
         self.rhop = idz('rhop')
 
-        gqh = self.reliable_get_SF('gqh', 'time')
+        gqh = self.reliable_get_SF('gqh', 'Rmag')
         self.q95 = -gqh('q95')
         self.r = gqh('Rmag')
         self.raus = gqh('Raus')
@@ -101,15 +101,23 @@ class Data:
         self.roben = gqh('delRoben')
         self.runten = gqh('delRuntn')
 
-        cpz = self.reliable_get_SF('cpz', 'time')
+        cpz = self.reliable_get_SF('cpz', 'LineInfo')
         self.lineinfo = cpz('LineInfo')
-        self.zimp = Zimp=LineInfo['Z0'][0] #Information about atomic number of main impurity
+        self.zimp = self.lineinfo['Z0'][0] #Information about atomic number of main impurity
 
-        gqh = self.reliable_get_SF('gqh', 'time')
-
-        mag = self.reliable_get_SF('mag', 'time')
+        mag = self.reliable_get_SF('mag', 'Ipa')
         self.i = mag('Ipa')
         self.tmag1 = mag('T-MAG-1')
+
+        self.ida = ida
+        self.idg = idg
+        self.idi = idi
+        self.mai = mai
+        self.ide = ide
+        self.idz = idz
+        self.gqh = gqh
+        self.cpz = cpz
+        self.mag = mag
 
         return True
 

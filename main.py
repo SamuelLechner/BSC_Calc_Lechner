@@ -35,10 +35,41 @@ class Main:
         self.SF_VER_SHIFT = 0.1
         self.SF_CONST_SHIFT = -0.07
 
-        self.singleNe() #CHAPTER: Single ne profile
-        self.singleBs() #CHAPTER: Computing single bs profile
-        self.multipleShiftsNe() #CHAPTER: Introducing all manipulation functions
-        self.multipleShiftsBs() #CHAPTER: Recomputing bs with manipulated ne functions
+        self.test()
+        #self.singleNe() #CHAPTER: Single ne profile
+        #self.singleBs() #CHAPTER: Computing single bs profile
+        #self.multipleShiftsNe() #CHAPTER: Introducing all manipulation functions
+        #self.multipleShiftsBs() #CHAPTER: Recomputing bs with manipulated ne functions
+
+    def test(self):
+        self.multShiftShot = self.SHOT
+        p1,p2 = self.p1, self.p2
+        data = Data(shot=self.multShiftShot, lvl=200)
+        ne = data.getNeFromTime(self.TIME)
+        pCH = Plot(data, mode='stacked')
+        pCH.setParams(time=self.TIME, iterations=4, ne=ne, p1=p1, p2=p2)
+        m = Manipulator(data)
+        b = Bootstrap(data)
+        c = Collisionality(data)
+        m.setTime(self.TIME)
+        m.setBoundaries(self.RHO1, self.RHO2)
+        valuesconstShiftHorizontal = [-0.02,-0.01,0.01,0.02]
+        cOrig = c.get_collisionalty(shot = self.SHOT, t = self.TIME)
+        bsOrig = b.getBsCurrent(t1 = self.TIME)
+        temp = data.getTempFromTime(t = self.TIME)
+        pCH.addBasics(bs = bsOrig, c = cOrig, temp = temp)
+        for val in zip(valuesconstShiftHorizontal, valuesconstShiftVertical, valuesHorShift, valuesVerShift):
+            # const horizontal
+            ne_m = m.constShiftHorizontal(val[0])
+            bs_m = b.getBsCurrent(t1 = self.TIME, ne_m = ne_m)
+            c_m = c.get_collisionalty(shot = self.SHOT, t = self.TIME, ne = ne_m)
+            pCH.addColliMan(c = c_m)
+            pCH.addNeMan(ne_m)
+            pCH.addBsMan(bs_m)
+
+        pCH.setYLimits()
+        pCH.save('Plots/MultipleBs/constShiftHorizontal')
+        pCH.show()
 
     def singleNe(self): # Loading the density profile
         data = Data(self.SHOT)
@@ -177,9 +208,7 @@ class Main:
         #pCH.show()
         #pCV.show()
         #pH.show()
-        #pV.show()
-
-        
+        #pV.show()        
 
 
 if __name__ == '__main__':

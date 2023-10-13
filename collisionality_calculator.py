@@ -72,9 +72,9 @@ class Collisionality:
         q=q*(-1)
         q=q.T
         map=sf.mapeq
-        rho_pol=map.rho2rho(ide, ide.rho_tor_n, coord_out='rho_pol')
+        rho_pol=map.rho2rho(self.data.ide, self.data.ide.rho_tor_n, coord_out='rho_pol')
         rho_pol=rho_pol.T
-        time_ide=ide.time
+        time_ide=self.data.ide.time
 
         idx5=np.where(time_ide>=t[0])[0][0]
         idx6=np.where(time_ide>=t[1])[0][0]
@@ -83,8 +83,8 @@ class Collisionality:
         sorti=np.argsort(rho_pol1)
         q11=q1[sorti]
         rho_pol11=rho_pol1[sorti]
-        idex2=np.where(rho[:,0]>=rho_pol11[-1])[0][0]
-        idex22=np.where(rho[:,0]>=rho_pol11[0])[0][0]
+        idex2=np.where(rho>=rho_pol11[-1])[0][0]
+        idex22=np.where(rho>=rho_pol11[0])[0][0]
         spl=interpolate.UnivariateSpline(rho_pol11,q11,k=3, s=1000000000, ext=3)
         xnew = rho[idex22:idex2,1]
         qfinal=spl(xnew)
