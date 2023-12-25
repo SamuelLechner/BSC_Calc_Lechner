@@ -2,7 +2,7 @@
 
 #### General Info
 
-Hi! Thanks for showing interest in my project. This repository contains the code developed during my [bachelor's thesis](https://www.youtube.com/watch?v=dQw4w9WgXcQ) at [TU Wien](https://www.tuwien.at/en/) in collaboration with the [Max Planck Institute for Plasma Physics](https://www.ipp.mpg.de/en). It encompasses a tool designed for manipulating density profiles and gaining insights into their influence on the bootstrap current.
+Hi! Thanks for showing interest in my project. This repository contains the code developed during my [bachelor's thesis](/Ressources/BachelorThesis_Lechner_Samuel.pdf) at [TU Wien](https://www.tuwien.at/en/) in collaboration with the [Max Planck Institute for Plasma Physics](https://www.ipp.mpg.de/en). It encompasses a tool designed for manipulating density profiles and gaining insights into their influence on the bootstrap current.
 
 #### How To Use
 
