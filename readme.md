@@ -10,7 +10,7 @@ The most effective method for gaining insight into its functionality is to exami
 
 ## Contribute
 
-While I don't have immediate plans to implement additional enhancements or extensions, I'm open to collaboration. If you're interested in contributing and making improvements, please feel free to reach out to me, and I'd be happy to add you as a collaborator!
+While I don't have immediate plans to implement additional enhancements or extensions, I'm open to collaboration. If you're interested in contributing and making improvements, please feel free to make a pull request :)
 
 #### Suggestions for Enhancing
 * Enhance the [collisionality_calculator](collisionality_calculator.py) module by modifying it to utilize data provided by the [data_reader](data_reader.py) module, instead of independently reading data from auf_sfutils and other sources.This redundant code is a result of using the collisionality_calculator module, which was developed by my colleague Johanna Zach. My goal was to minimize the need for extensive adaptations when integrating it into my project.
